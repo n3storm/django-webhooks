@@ -19,6 +19,9 @@ if hasattr(settings, 'WEB_HOOK_OWNER_MODEL'):
 if hasattr(settings, 'WEB_HOOK_ACTIONS'):
     WEB_HOOK_ACTIONS = settings.WEB_HOOK_ACTIONS
 
+if hasattr(settings, 'WEB_HOOK_OWNER_LOCAL'):
+    WEB_HOOK_OWNER_LOCAL = settings.WEB_HOOK_OWNER_LOCAL
+
 # Work out our dynamic relation
 app_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[0]
 model_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[1]
