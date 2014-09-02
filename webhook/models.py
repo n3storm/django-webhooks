@@ -3,7 +3,6 @@ from datetime import datetime
 from django.conf import settings
 from django.utils import timezone
 from django.db import models
-import django.dispatch
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse_lazy
@@ -11,6 +10,8 @@ from django.core.urlresolvers import reverse_lazy
 from uuidfield import UUIDField
 
 from .default_settings import WEB_HOOK_OWNER_MODEL, WEB_HOOK_ACTIONS, WEB_HOOK_OWNER_LOCAL
+
+from .signals import webhook_triggered_signal
 
 # Load defaults
 if hasattr(settings, 'WEB_HOOK_OWNER_MODEL'):
@@ -27,9 +28,6 @@ app_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[0]
 model_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[1]
 module = __import__(app_name, fromlist=[model_name])
 owner_model = getattr(module, model_name)
-
-# signal
-webhook_triggered_signal = django.dispatch.Signal(providing_args=['action', 'content_object'])
 
 
 class WebHook(models.Model):
@@ -94,5 +92,10 @@ class WebHook(models.Model):
             return True
 
     def trigger(self):
-        webhook_triggered_signal.send(sender=self.__class__, action=self.action, content_object=self.content_object)
+        webhook_triggered_signal.send(
+            sender=self.__class__,
+            triggered=True,
+            action=self.action,
+            content_object=self.content_object,
+            content_type=self.content_type)
         self.save()  # Update triggered field
