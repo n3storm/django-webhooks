@@ -4,18 +4,18 @@ Reusable Django app that provides webhooks.
 
 This is used by [Volt Grid](https://www.voltgrid.com/).
 
-[![Build Status](https://travis-ci.org/voltgrid/django-webhook.svg?branch=master)](https://travis-ci.org/voltgrid/django-webhook)
-[![Coverage Status](https://coveralls.io/repos/voltgrid/django-webhook/badge.png)](https://coveralls.io/r/voltgrid/django-webhook)
+[![Build Status](https://travis-ci.org/voltgrid/django-webhooks.svg?branch=master)](https://travis-ci.org/voltgrid/django-webhooks)
+[![Coverage Status](https://coveralls.io/repos/voltgrid/django-webhooks/badge.png)](https://coveralls.io/r/voltgrid/django-webhooks)
 
 ## Installation
 
 Install with pip:
 
-	pip install git+https://github.com/voltgrid/django-webhook.git#egg=webhook
+	pip install git+https://github.com/voltgrid/django-webhooks.git#egg=webhooks
 
 Add to your Django project in your Python path.
 
-Add `webhook` to your `INSTALLED_APPS`.
+Add `webhooks` to your `INSTALLED_APPS`.
 
 Set `WEB_HOOK_USER` in `settings.py`. This must point to a model that provides a _user_ field. Eg:
 

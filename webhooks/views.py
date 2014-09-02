@@ -13,7 +13,7 @@ class WebHookView(UpdateView):
 
     http_method_names = [u'get', u'post', u'head']
     model = WebHook
-    template_name = 'webhook/action.html'
+    template_name = 'webhooks/action.html'
 
     @csrf_exempt
     def dispatch(self, *args, **kwargs):

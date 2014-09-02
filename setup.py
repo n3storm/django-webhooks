@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 VERSION = '0.0.1'
 
 setup(
-    name='django-webhook',
+    name='django-webhooks',
     version=VERSION,
     description='Reusable Django app that provides webhooks',
     long_description=open('README.md').read(),
     author='Andrew Cutler',
     author_email='andrew@voltgrid.com',
-    url='https://github.com/voltgrid/django-webhook',
-    package_dir={'webhook': 'webhook'},
+    url='https://github.com/voltgrid/django-webhooks',
+    package_dir={'webhooks': 'webhooks'},
     packages=find_packages(),
     package_data = {
         # If any package contains *.txt etc include

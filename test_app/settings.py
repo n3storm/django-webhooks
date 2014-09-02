@@ -11,7 +11,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.contenttypes',
-    'webhook',
+    'webhooks',
     'test_app',
 )
 
