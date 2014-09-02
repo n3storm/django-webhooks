@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from uuidfield import UUIDField
 
-from default_settings import WEB_HOOK_OWNER_MODEL, WEB_HOOK_ACTIONS, WEB_HOOK_OWNER_LOCAL
+from .default_settings import WEB_HOOK_OWNER_MODEL, WEB_HOOK_ACTIONS, WEB_HOOK_OWNER_LOCAL
 
 # Load defaults
 if hasattr(settings, 'WEB_HOOK_OWNER_MODEL'):
