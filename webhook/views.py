@@ -1,4 +1,7 @@
-import urlparse
+try:
+    from urllib import parse as urlparse
+except ImportError:
+    import urlparse
 
 from django.views.generic.edit import UpdateView
 from django.views.decorators.csrf import csrf_exempt

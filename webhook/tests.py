@@ -1,4 +1,7 @@
-import urlparse
+try:
+    from urllib import parse as urlparse
+except ImportError:
+    import urlparse
 
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse_lazy
