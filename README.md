@@ -11,7 +11,7 @@ This is used by [Volt Grid](https://www.voltgrid.com/).
 
 Install with pip:
 
-	pip install git+https://github.com/voltgrid/django-webhook.git#egg=dnsmanager
+	pip install git+https://github.com/voltgrid/django-webhook.git#egg=webhook
 
 Add to your Django project in your Python path.
 
