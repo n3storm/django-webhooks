@@ -16,7 +16,7 @@ from .models import WebHook
 class WebHookFilterTest(TestCase):
 
     def filter(self, payload, regex):
-        ab = mommy.make_recipe('webhook.web_hook')
+        ab = mommy.make_recipe('webhooks.web_hook')
         ab.filter = regex
         ab.action = 'R'
         ab.method = 'P'
@@ -54,7 +54,7 @@ class WebHookViewTest(TestCase):
 
     def setUp(self):
         # API User
-        self.user = mommy.make_recipe('webhook.user')
+        self.user = mommy.make_recipe('webhooks.user')
         self.user.super_user = True
         self.factory = RequestFactory()
 
@@ -63,7 +63,7 @@ class WebHookViewTest(TestCase):
         gh_payload = '{ "ref": "refs/heads/master" }'
         gh_regex = 'refs/heads/master'
 
-        web_hook = mommy.make_recipe('webhook.web_hook')
+        web_hook = mommy.make_recipe('webhooks.web_hook')
         web_hook.filter = gh_regex
         web_hook.action = 'R'
         web_hook.method = 'P'
