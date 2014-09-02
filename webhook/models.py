@@ -78,7 +78,7 @@ class WebHook(models.Model):
         try:
             if self.filter is not None:
                 re.compile(self.filter)
-        except Exception, e:
+        except Exception as e:
             raise
 
     def match_filter(self, data):
