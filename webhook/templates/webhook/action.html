@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block body_content %}
+<h2>{{ webhook }}</h2>
+<p>Object: {{ webhook.content_object }}</p>
+<p>Triggered: {{ webhook.triggered }}</p>
+{% endblock %}
