@@ -1,6 +1,9 @@
 # DNS Manager for Django
 
-Reusable Django app that provides webhooks.
+Reusable Django app that allows for webhooks to be consumed.
+
+Emits a signal `webhook_triggered_signal` when the webhook is triggered. This allows you to provide an action for the
+webhook.
 
 This is used by [Volt Grid](https://www.voltgrid.com/).
 
@@ -31,3 +34,9 @@ Set `WEB_HOOK_USER` in `settings.py`. This must point to a model that provides a
             return "%s" % self.name
             
 Run `manage.py syncdb`.
+
+## Testing
+
+1. Checkout the source.
+2. Install all the requirements `pip install -r requirements.txt.`
+3. Then run `./manage.py test`. 
