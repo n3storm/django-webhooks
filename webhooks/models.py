@@ -1,5 +1,4 @@
 import re
-from django.conf import settings
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -7,25 +6,9 @@ from django.core.urlresolvers import reverse_lazy
 
 from uuidfield import UUIDField
 
-from .default_settings import WEB_HOOK_OWNER_MODEL, WEB_HOOK_ACTIONS, WEB_HOOK_OWNER_LOCAL
+from .settings import WEB_HOOK_ACTIONS, WEB_HOOK_OWNER_LOCAL, OWNER_MODEL
 
 from .signals import webhook_triggered_signal
-
-# Load defaults
-if hasattr(settings, 'WEB_HOOK_OWNER_MODEL'):
-    WEB_HOOK_OWNER_MODEL = settings.WEB_HOOK_OWNER_MODEL
-
-if hasattr(settings, 'WEB_HOOK_ACTIONS'):
-    WEB_HOOK_ACTIONS = settings.WEB_HOOK_ACTIONS
-
-if hasattr(settings, 'WEB_HOOK_OWNER_LOCAL'):
-    WEB_HOOK_OWNER_LOCAL = settings.WEB_HOOK_OWNER_LOCAL
-
-# Work out our dynamic relation
-app_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[0]
-model_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[1]
-module = __import__(app_name, fromlist=[model_name])
-owner_model = getattr(module, model_name)
 
 
 class WebHook(models.Model):
@@ -39,12 +22,13 @@ class WebHook(models.Model):
     )
 
     id = UUIDField(auto=True, primary_key=True)
-    owner = models.ForeignKey(owner_model, editable=False)  # Editable?
+    owner = models.ForeignKey(OWNER_MODEL, editable=False)  # Editable?
     action = models.CharField(max_length=1, choices=ACTIONS, default='R')
     triggered = models.DateTimeField("Time Triggered", auto_now=True)
     method = models.CharField(max_length=1, choices=TRIGGER_METHOD, default='P')
     auth = models.CharField("API Key", max_length=64, blank=True)  # Not used for G / H requests
-    filter = models.CharField("Regex Filter Payload", max_length=64, blank=True, help_text='Filter which events apply')  # Not used for HEAD
+    filter = models.CharField("Regex Filter Payload", max_length=64, blank=True,
+                              help_text='Filter which events apply')  # Not used for HEAD
 
     # Following fields are required for using GenericForeignKey
     content_type = models.ForeignKey(ContentType)
@@ -96,4 +80,4 @@ class WebHook(models.Model):
             action=self.action,
             content_object=self.content_object,
             content_type=self.content_type)
-        self.save()  # Update triggered field
+        self.save()  # Update 'triggered' timestamp field
