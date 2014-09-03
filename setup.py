@@ -1,12 +1,19 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
+
+try:
+    from pypandoc import convert
+    read_md = lambda f: convert(f, 'rst')
+except ImportError:
+    print("Warning: pypandoc module not found, could not convert Markdown to RST")
+    read_md = lambda f: open(f, 'r').read()
 
 setup(
     name='django-webhooks',
     version=VERSION,
     description='Reusable Django app that provides webhooks',
-    long_description=open('README.md').read(),
+    long_description=read_md('README.md'),
     author='Andrew Cutler',
     author_email='andrew@voltgrid.com',
     url='https://github.com/voltgrid/django-webhooks',
