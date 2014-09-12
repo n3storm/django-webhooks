@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block body_content %}
-<h2>{{ webhooks }}</h2>
-<p>Object: {{ webhooks.content_object }}</p>
-<p>Triggered: {{ webhooks.triggered }}</p>
+<h2>Webhook</h2>
+
+<p><strong>Target</strong> Object: {{ webhook.content_object }} ({{ webhook.content_type }})</p>
+<p><strong>Action:</strong> {{ webhook.get_action_display }}</p>
+<p><strong>Owner:</strong> {{ webhook.owner }}</p>
+<p><strong>Filter:</strong> {{ webhook.filter }}</p>
+<p><strong>HTTP Method:</strong> {{ webhook.get_method_display }}</p>
+<p><strong>Triggered:</strong> {{ webhook.triggered }}</p>
+
 {% endblock %}
