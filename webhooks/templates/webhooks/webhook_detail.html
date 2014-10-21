@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Webhook Detail{% endblock %}
+{% block title %}Webhook Details{% endblock %}
 
 {% block content %}
 <p><strong>Target Object</strong>: {{ webhook.content_object }} ({{ webhook.content_type }})</p>
@@ -9,4 +9,12 @@
 <p><strong>Filter:</strong> {{ webhook.filter }}</p>
 <p><strong>HTTP Method:</strong> {{ webhook.get_method_display }}</p>
 <p><strong>Triggered:</strong> {{ webhook.triggered }}</p>
+
+<hr />
+<p>
+    To trigger this webhook you must send an HTTP <strong>{{ webhook.get_method_display }}</strong>
+    request to {{ request.build_absolute_uri }}
+    {% if webhook.filter %} with a payload that passes the filter <strong>{{ webhook.filter }}</strong>.{% else %}.{% endif %}
+    When triggered this will <strong>{{ webhook.get_action_display }}</strong> the <strong>{{ webhook.content_object }}</strong> object.
+</p>
 {% endblock %}
