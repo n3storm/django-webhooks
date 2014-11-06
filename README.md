@@ -39,4 +39,10 @@ Run `manage.py syncdb`.
 
 1. Checkout the source.
 2. Install all the requirements `pip install -r requirements.txt.`
-3. Then run `./manage.py test`. 
+3. Then run `./manage.py test`.
+
+### Triggering with curl
+
+    curl -H "Content-Type: application/json" -d "${DATA}" ${URL}
+
+Where `$DATA` is JSON payload that will pass the regex, and `$URL` is the webhook URL.
