@@ -1,4 +1,6 @@
 import re
+from datetime import datetime
+
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -24,7 +26,7 @@ class WebHook(models.Model):
     id = UUIDField(auto=True, primary_key=True)
     owner = models.ForeignKey(OWNER_MODEL, editable=False)  # Editable?
     action = models.CharField(max_length=1, choices=ACTIONS, default='R')
-    triggered = models.DateTimeField("Time Triggered", auto_now=True)
+    triggered = models.DateTimeField("Time Triggered", blank=True, null=True)
     method = models.CharField(max_length=1, choices=TRIGGER_METHOD, default='P')
     auth = models.CharField("API Key", max_length=64, blank=True)  # Not used for G / H requests
     filter = models.CharField("Regex Filter Payload", max_length=64, blank=True,
@@ -80,4 +82,25 @@ class WebHook(models.Model):
             action=self.action,
             content_object=self.content_object,
             content_type=self.content_type)
-        self.save()  # Update 'triggered' timestamp field
+        self.triggered = datetime.now()  # Update 'triggered' timestamp field
+        self.save()
+
+
+class Log(models.Model):
+
+    # REQUEST_CONTENT_TYPES = (
+    #     ('J', 'application/json'),
+    #     ('F', 'application/x-www-form-urlencoded'),
+    # )
+
+    HTTP_METHOD = (
+        ('G', 'GET'),
+        ('H', 'HEAD'),
+        ('P', 'POST')
+    )
+
+    webhook = models.ForeignKey(WebHook)
+    method = models.CharField(max_length=1, choices=HTTP_METHOD)
+    request_content_type = models.CharField(max_length=64)
+    payload = models.TextField()
+    created = models.DateTimeField("Date Created", auto_now_add=True)

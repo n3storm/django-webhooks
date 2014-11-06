@@ -15,3 +15,5 @@ app_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[0]
 model_name = WEB_HOOK_OWNER_MODEL.rsplit('.', 1)[1]
 module = __import__(app_name, fromlist=[model_name])
 OWNER_MODEL = getattr(module, model_name)
+
+WEB_HOOK_LOG_ENABLED = getattr(settings, 'WEB_HOOK_LOG_ENABLED', True)  # Log all requests

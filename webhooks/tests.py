@@ -3,13 +3,14 @@ try:
 except ImportError:
     import urlparse
 
-from django.test import TestCase, RequestFactory
+from django.test import Client, TestCase, RequestFactory
 from django.core.urlresolvers import reverse_lazy
-from django.core.exceptions import ValidationError
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+
 from model_mommy import mommy
 
 from .views import WebHookView
-
 from .models import WebHook
 
 
@@ -58,27 +59,65 @@ class WebHookViewTest(TestCase):
         self.user.super_user = True
         self.factory = RequestFactory()
 
-    def test_action(self):
+    def test_gh_action(self):
 
-        gh_payload = '{ "ref": "refs/heads/master" }'
-        gh_regex = 'refs/heads/master'
+        payload = '{ "ref": "refs/heads/master" }'
+        regex = 'refs/heads/master'
 
         web_hook = mommy.make_recipe('webhooks.web_hook')
-        web_hook.filter = gh_regex
+        web_hook.filter = regex
         web_hook.action = 'R'
         web_hook.method = 'P'
+        # Assign webhhook to user object (need to point it somewhere)
+        web_hook.object_id = self.user.pk
+        web_hook.content_type = ContentType.objects.get_for_model(User)
         web_hook.save()
 
         url = web_hook.get_absolute_url()
         self.assertEqual(url, reverse_lazy('web-hook', kwargs={'pk': web_hook.pk}))
+
         data = dict()
-        data['gh_payload'] = gh_payload
+        data['payload'] = payload
 
         request = self.factory.post(url, data=data)
         request.user = self.user
 
         # Actual request
         view = WebHookView.as_view()
-        # TODO FIXME... this is failing because the instance doesn't have CT initialised
-        # response = view(request, pk=web_hook.pk)
-        # self.assertEqual(response.status_code, 200)
+        response = view(request, pk=web_hook.pk)
+        self.assertEqual(response.status_code, 200)
+
+        # reload from DB
+        web_hook = WebHook.objects.get(pk=web_hook.pk)
+        self.assertNotEqual(web_hook.triggered, None)  # check triggered updated
+
+    def test_bb_action(self):
+
+        payload = '{ "branch": "master" }'
+        regex = '\"branch\":\s*\"master\"'
+
+        web_hook = mommy.make_recipe('webhooks.web_hook')
+        web_hook.filter = regex
+        web_hook.action = 'R'
+        web_hook.method = 'P'
+        # Assign webhhook to user object (need to point it somewhere)
+        web_hook.object_id = self.user.pk
+        web_hook.content_type = ContentType.objects.get_for_model(User)
+        web_hook.save()
+        url = web_hook.get_absolute_url()
+        self.assertEqual(url, reverse_lazy('web-hook', kwargs={'pk': web_hook.pk}))
+
+        data = dict()
+        data['payload'] = payload
+
+        request = self.factory.post(url, data=data, content_type='application/x-www-form-urlencoded')
+        request.user = self.user
+
+        # Actual request
+        view = WebHookView.as_view()
+        response = view(request, pk=web_hook.pk)
+        self.assertEqual(response.status_code, 200)
+
+        # reload from DB
+        web_hook = WebHook.objects.get(pk=web_hook.pk)
+        self.assertNotEqual(web_hook.triggered, None)  # check triggered updated
