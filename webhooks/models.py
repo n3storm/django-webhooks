@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 
+from django.utils import timezone
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -82,7 +83,7 @@ class WebHook(models.Model):
             action=self.action,
             content_object=self.content_object,
             content_type=self.content_type)
-        self.triggered = datetime.now()  # Update 'triggered' timestamp field
+        self.triggered = datetime.now(tz=timezone.utc)  # Update 'triggered' timestamp field
         self.save()
 
 
