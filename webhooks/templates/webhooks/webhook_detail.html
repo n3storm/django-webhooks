@@ -10,11 +10,30 @@
 <p><strong>HTTP Method:</strong> {{ webhook.get_method_display }}</p>
 <p><strong>Triggered:</strong> {{ webhook.triggered }}</p>
 
-<hr />
+<h3>Usage</h3>
 <p>
     To trigger this webhook you must send an HTTP <strong>{{ webhook.get_method_display }}</strong>
     request to {{ request.build_absolute_uri }}
     {% if webhook.filter %} with a payload that passes the filter <strong>{{ webhook.filter }}</strong>.{% else %}.{% endif %}
     When triggered this will <strong>{{ webhook.get_action_display }}</strong> the <strong>{{ webhook.content_object }}</strong> object.
 </p>
+
+<h3>Logs</h3>
+<table class="table">
+    <tr>
+        <th>Created</th>
+        <th>Method</th>
+        <th>Content Type</th>
+        <th>Payload</th>
+    </tr>
+    {% for log in webhook.logs.all|slice:":3" %}
+    <tr>
+        <td>{{ log.created }}</td>
+        <td>{{ log.get_method_display }}</td>
+        <td>{{ log.request_content_type }}</td>
+        <td>{{ log.payload }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 {% endblock %}

@@ -45,7 +45,7 @@ class WebHook(models.Model):
         ordering = ['action']
 
     def __unicode__(self):
-        return "%s - %s - %s" % (self.get_action_display(), self.get_method_display(), self.content_type)
+        return "%s - %s (%s)" % (self.get_action_display(), self.content_type, self.content_object)
 
     def get_absolute_url(self):
         return reverse_lazy('web-hook', kwargs={'pk': self.pk})
@@ -100,8 +100,11 @@ class Log(models.Model):
         ('P', 'POST')
     )
 
-    webhook = models.ForeignKey(WebHook)
+    webhook = models.ForeignKey(WebHook, related_name='logs')
     method = models.CharField(max_length=1, choices=HTTP_METHOD)
     request_content_type = models.CharField(max_length=64)
     payload = models.TextField()
     created = models.DateTimeField("Date Created", auto_now_add=True)
+
+    def __unicode__(self):
+        return "Log of %s - %s (%s)" % (self.webhook.get_action_display(), self.webhook.content_type, self.webhook.content_object)
