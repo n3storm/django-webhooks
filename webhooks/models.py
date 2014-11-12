@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse_lazy
+from django.conf import settings
 
 from uuidfield import UUIDField
 
@@ -83,7 +84,11 @@ class WebHook(models.Model):
             action=self.action,
             content_object=self.content_object,
             content_type=self.content_type)
-        self.triggered = datetime.now(tz=timezone.utc)  # Update 'triggered' timestamp field
+          # Update 'triggered' timestamp field
+        if settings.USE_TZ:
+            self.triggered = datetime.now(tz=timezone.utc)
+        else:
+            self.triggered = datetime.now()
         self.save()
 
 
