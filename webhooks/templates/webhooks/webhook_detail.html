@@ -26,7 +26,7 @@
         <th>Content Type</th>
         <th>Payload</th>
     </tr>
-    {% for log in webhook.logs.all|slice:":3" reversed %}
+    {% for log in webhook.logs.all|slice:":3" %}
     <tr>
         <td>{{ log.created }}</td>
         <td>{{ log.get_method_display }}</td>
