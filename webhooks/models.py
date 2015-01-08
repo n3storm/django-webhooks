@@ -112,7 +112,7 @@ class Log(models.Model):
     created = models.DateTimeField("Date Created", auto_now_add=True)
 
     class Meta:
-        ordering = ['created']
+        ordering = ['-created']
 
     def __unicode__(self):
         return "Log of %s - %s (%s)" % (self.webhook.get_action_display(), self.webhook.content_type, self.webhook.content_object)
